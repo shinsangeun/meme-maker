@@ -5,23 +5,26 @@ canvas.width = 800;
 canvas.height = 800;
 ctx.lineWidth = 2;
 
-const colors = [
-    "red",
-    "blue",
-    "orange",
-    "yellow",
-    "purple"
-]
+let isPainting = false;
 
-// ctx.moveTo(0, 0);
-
-function onclick(event){
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    ctx.strokeStyle = color;
-    ctx.lineTo(event.offsetX, event.offsetY);
-    ctx.stroke();
+function onMove(event){
+    if(isPainting){
+        ctx.lineTo(event.offsetX, event.offsetY);
+        ctx.fill();
+        return;
+    }
+    ctx.moveTo(event.offsetX, event.offsetY);
 }
 
-canvas.addEventListener("mousemove", onclick)
+function startPainting(){
+    isPainting = true;
+}
+
+function cancelPainting(){
+    isPainting = false;
+}
+
+canvas.addEventListener("mousemove", onMove)
+canvas.addEventListener("mousedown", startPainting);
+canvas.addEventListener("mouseup", cancelPainting)
+canvas.addEventListener("mouseleave", cancelPainting);
